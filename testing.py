@@ -1,18 +1,21 @@
 import gymnasium as gym
 from stable_baselines3.common.evaluation import evaluate_policy
 from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3 import PPO
+import os
 
-def test():
-    model_path=""
-    ep_count = 5
-    try:
-        model_path = "models/best_model.zip"
-    except FileNotFoundError:
-        print("model file not found, run training")
+def test(model_path="models/best_model.zip", norm_path="models/vec_normalize.pkl", ep_count=5):
+    env = Monitor(gym.make("BipedalWalker-v3", render_mode="human", hardcore=True))
+    env = DummyVecEnv([lambda: env])
 
-    env = gym.make("BipedalWalker-v3", render_mode="human", hardcore=True)
-    env = Monitor(env)
+    if os.path.exists(norm_path):
+        env = VecNormalize.load(norm_path, env)
+        env.norm_reward = False
+        env.training = False
+    else:
+        print("normalization path doesn't exist, run training")
+    
     model = PPO.load(model_path)
 
     rewards, lengths = evaluate_policy(model, env, n_eval_episodes=ep_count,
