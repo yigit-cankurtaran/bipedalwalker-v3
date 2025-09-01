@@ -29,8 +29,10 @@ def train():
     model = PPO(
         "MlpPolicy",
         train_env,
-        # the rest are gonna be default for now
-        # pretty horrible results 
+        gae_lambda=0.9,
+        n_steps=512,
+        n_epochs=5,
+        ent_coef=0.001
     )
     
     model.learn(
