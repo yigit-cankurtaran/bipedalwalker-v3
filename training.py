@@ -6,10 +6,16 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3 import PPO
 import os
 
+def linear_decay(init_val):
+    def func(progress_remaining):
+        return init_val * progress_remaining
+
+    return func
+
 def train():
     os.makedirs("logs", exist_ok=True)
     os.makedirs("models", exist_ok=True)
-    timesteps = 500_000
+    timesteps = 2_000_000
     
     # TODO: vecnormalize these
     train_env = make_vec_env("BipedalWalker-v3", 4, env_kwargs={"hardcore":True})
@@ -35,11 +41,11 @@ def train():
     model = PPO(
         "MlpPolicy",
         train_env,
-        gae_lambda=0.98,
-        gamma=0.9,
-        n_steps=512,
-        n_epochs=5,
-        ent_coef=0.001
+        gae_lambda=0.9, # lower lambda can be better for locomotion
+        gamma=0.999, # need future good rewards
+        ent_coef=0.05, # need a higher exploration
+        learning_rate=linear_decay(3e-3),
+        max_grad_norm=1.0
     )
     
     model.learn(
