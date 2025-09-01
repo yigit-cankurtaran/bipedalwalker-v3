@@ -42,10 +42,9 @@ def train():
         "MlpPolicy",
         train_env,
         gae_lambda=0.9, # lower lambda can be better for locomotion
-        gamma=0.9, # need future good rewards
-        ent_coef=0.05, # need more exploration
-        learning_rate=linear_decay(1e-3),
-        max_grad_norm=1.0
+        gamma=0.99, # need future good rewards
+        ent_coef=0.005, # need more exploration
+        learning_rate=linear_decay(3e-4), # conservative start
     )
     
     model.learn(
