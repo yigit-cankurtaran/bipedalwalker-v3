@@ -40,7 +40,7 @@ def train():
     )
 
     train_env.save("models/vec_normalize.pkl")
-    model.save("models")
+    model.save("models/latest_model.zip")
 
     # in case we need the train func elswehere
     return train_env, model
