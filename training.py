@@ -9,7 +9,7 @@ import os
 def train():
     os.makedirs("logs", exist_ok=True)
     os.makedirs("models", exist_ok=True)
-    timesteps = 100_000
+    timesteps = 500_000
     
     # TODO: vecnormalize these
     train_env = make_vec_env("BipedalWalker-v3", 4, env_kwargs={"hardcore":True})
@@ -25,11 +25,18 @@ def train():
         n_eval_episodes=10,
         eval_freq=2500
     )
+
+    # syncing normalization stats with eval and train
+    # not really a problem for simpler and more forgiving envs
+    # but for hardcore we need to fix this
+    eval_env.obs_rms = train_env.obs_rms
+    eval_env.ret_rms = train_env.ret_rms
     
     model = PPO(
         "MlpPolicy",
         train_env,
-        gae_lambda=0.9,
+        gae_lambda=0.98,
+        gamma=0.9,
         n_steps=512,
         n_epochs=5,
         ent_coef=0.001
