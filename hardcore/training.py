@@ -43,7 +43,7 @@ def train():
         train_env,
         gae_lambda=0.9, # lower lambda can be better for locomotion
         gamma=0.99, # need future good rewards
-        ent_coef=0.005, # need more exploration
+        ent_coef=0.01, # need more exploration
         learning_rate=linear_decay(3e-4), # conservative start
     )
     
