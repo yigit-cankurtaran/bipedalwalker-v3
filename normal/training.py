@@ -1,7 +1,7 @@
 import gymnasium as gym
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import DummyVecEnv,VecNormalize
-from stable_baselines3.common.callbacks import EvalCallback
+from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnRewardThreshold
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3 import PPO
 import os
@@ -22,13 +22,16 @@ def train():
 
     eval_env = DummyVecEnv([lambda: Monitor(gym.make("BipedalWalker-v3"))])
     eval_env = VecNormalize(eval_env, training=False)
+
+    stop_training = StopTrainingOnRewardThreshold(230., verbose=1)
     
     eval_callback = EvalCallback(
         eval_env,
         log_path="logs",
         best_model_save_path="models",
         n_eval_episodes=10,
-        eval_freq=2500
+        eval_freq=2500,
+        callback_on_new_best=stop_training
     )
 
     # syncing normalization stats with eval and train
@@ -42,8 +45,8 @@ def train():
         train_env,
         gae_lambda=0.9, # lower lambda can be better for locomotion
         gamma=0.99, # need future good rewards
-        ent_coef=0.005, # need more exploration
-        learning_rate=linear_decay(3e-4), # conservative start
+        ent_coef=0.01, # need more exploration
+        learning_rate=linear_decay(1e-4), # conservative start
     )
     
     model.learn(
