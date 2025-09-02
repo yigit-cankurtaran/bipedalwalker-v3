@@ -46,12 +46,7 @@ def train():
         gae_lambda=0.9, # lower lambda can be better for locomotion
         gamma=0.99, # need future good rewards
         ent_coef=0.01, # need more exploration
-        learning_rate=linear_decay(1e-4), # conservative start
-        # larger batches can help with stability
-        n_steps=8192,
-        batch_size=256,
-        # lower clip range can help with locomotion
-        clip_range=0.1,
+        learning_rate=linear_decay(3e-4), # conservative start
     )
     
     model.learn(
