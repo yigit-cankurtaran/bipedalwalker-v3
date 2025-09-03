@@ -47,6 +47,7 @@ def train():
         gamma=0.99, # need future good rewards
         ent_coef=0.01, # need more exploration
         learning_rate=linear_decay(3e-4), # conservative start
+        tensorboard_log="./tenslogs"
     )
     
     model.learn(
