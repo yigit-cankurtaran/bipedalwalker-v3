@@ -4,12 +4,12 @@ from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3 import PPO
 import os
-from reward_shaper import BipedalRewardShaper
+from reward_shaper import SimpleBipedalRewardShaper
 
 def test(model_path="models/best_model.zip", norm_path="models/vec_normalize.pkl", ep_count=5):
     # Use the same reward shaping for testing
     base_env = gym.make("BipedalWalker-v3", render_mode="human", hardcore=True)
-    shaped_env = BipedalRewardShaper(base_env)
+    shaped_env = SimpleBipedalRewardShaper(base_env)
     env = Monitor(shaped_env)
     env = DummyVecEnv([lambda: env])
 

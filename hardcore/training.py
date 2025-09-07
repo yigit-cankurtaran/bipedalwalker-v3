@@ -5,7 +5,7 @@ from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3 import PPO
 import os
-from reward_shaper import BipedalRewardShaper
+from reward_shaper import SimpleBipedalRewardShaper
 
 def linear_decay(init_val):
     def func(progress_remaining):
@@ -21,7 +21,7 @@ def train():
     # Create environments with reward shaping
     def make_shaped_env():
         env = gym.make("BipedalWalker-v3", hardcore=True)
-        return BipedalRewardShaper(env)
+        return SimpleBipedalRewardShaper(env)
     
     train_env = make_vec_env(make_shaped_env, 4)
     train_env = VecNormalize(train_env)
