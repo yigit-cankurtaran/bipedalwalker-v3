@@ -50,25 +50,32 @@ class BipedalRewardShaper(Wrapper):
         # Start with base reward (forward progress)
         shaped_reward = base_reward
         
-        # 1. Stability rewards
+        # Movement requirement - penalize standing still
+        if hull_vel_x < 0.1:  # Too slow
+            shaped_reward -= 0.5
+        
+        # Only give auxiliary rewards when moving forward
+        movement_multiplier = min(hull_vel_x / 0.5, 1.0) if hull_vel_x > 0 else 0
+        
+        # 1. Stability rewards (only while moving)
         stability_reward = self._stability_reward(hull_angle, hull_vel_y)
-        shaped_reward += 0.3 * stability_reward
+        shaped_reward += 0.1 * stability_reward * movement_multiplier
         
-        # 2. Symmetric leg usage
+        # 2. Symmetric leg usage (only while moving)
         symmetry_reward = self._leg_symmetry_reward(joint_angles, joint_speeds)
-        shaped_reward += 0.2 * symmetry_reward
+        shaped_reward += 0.05 * symmetry_reward * movement_multiplier
         
-        # 3. Proper gait pattern (alternating contacts)
+        # 3. Proper gait pattern (only while moving)
         gait_reward = self._gait_pattern_reward(leg_contacts)
-        shaped_reward += 0.25 * gait_reward
+        shaped_reward += 0.1 * gait_reward * movement_multiplier
         
-        # 4. Joint smoothness (penalize jerky movements)
+        # 4. Joint smoothness (only while moving)
         smoothness_reward = self._joint_smoothness_reward(action)
-        shaped_reward += 0.15 * smoothness_reward
+        shaped_reward += 0.05 * smoothness_reward * movement_multiplier
         
         # 5. Obstacle navigation
         obstacle_reward = self._obstacle_navigation_reward(leg_contacts, lidar, hull_vel_x)
-        shaped_reward += 0.1 * obstacle_reward
+        shaped_reward += 0.05 * obstacle_reward
         
         return shaped_reward
     
