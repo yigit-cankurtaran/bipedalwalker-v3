@@ -19,12 +19,12 @@ class SimpleBipedalRewardShaper(Wrapper):
         # 3. Leg coordination - penalize both feet down (inefficient gait)
         right_foot_contact = obs[8]
         left_foot_contact = obs[13]
-        both_feet_penalty = -0.1 if (right_foot_contact > 0.5 and left_foot_contact > 0.5) else 0
+        both_feet_penalty = -0.15 if (right_foot_contact > 0.5 and left_foot_contact > 0.5) else 0
         
         # 4. Vertical stability - penalize bouncing
         # TODO: remove this and see how the training goes
         vertical_velocity = obs[3]  # Normalized vertical velocity
-        vertical_penalty = -0.1 * abs(vertical_velocity)
+        vertical_penalty = -0.3 * abs(vertical_velocity)
         
         shaped_reward = reward + stability_bonus + speed_reward + both_feet_penalty + vertical_penalty
 

@@ -16,7 +16,7 @@ def linear_decay(init_val):
 def train():
     os.makedirs("logs", exist_ok=True)
     os.makedirs("models", exist_ok=True)
-    timesteps = 2_000_000
+    timesteps = 10_000_000
     
     # Create environments with reward shaping
     def make_shaped_env():
