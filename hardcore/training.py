@@ -46,13 +46,13 @@ def train():
     model = PPO(
         "MlpPolicy",
         train_env,
-        gae_lambda=0.95, # increased for better long-term planning
+        gae_lambda=0.97, # increased for better long-term planning
         gamma=0.995, # higher discount for shaped rewards
         ent_coef=0.005, # reduced entropy for more stable learning
         learning_rate=linear_decay(2.5e-4), # slightly lower for stability
         clip_range=0.2,
         vf_coef=0.5, # balanced value function learning
-        n_steps=2048, # longer rollouts for gait patterns
+        n_steps=4096, # longer rollouts for gait patterns
         batch_size=64,
         n_epochs=10,
         tensorboard_log="logs/tensorboard"
