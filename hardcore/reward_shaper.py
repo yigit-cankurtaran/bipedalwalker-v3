@@ -24,7 +24,7 @@ class SimpleBipedalRewardShaper(Wrapper):
         # 4. Vertical stability - penalize bouncing
         # TODO: remove this and see how the training goes
         vertical_velocity = obs[3]  # Normalized vertical velocity
-        vertical_penalty = -0.5 * abs(vertical_velocity)
+        vertical_penalty = -0.1 * abs(vertical_velocity)
         
         shaped_reward = reward + stability_bonus + speed_reward + both_feet_penalty + vertical_penalty
 
