@@ -5,6 +5,7 @@ from stable_baselines3.common.callbacks import EvalCallback, StopTrainingOnRewar
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3 import PPO
 import os
+from reward_shaper import SimpleBipedalRewardShaper
 
 def linear_decay(init_val):
     def func(progress_remaining):
@@ -17,10 +18,20 @@ def train():
     os.makedirs("models", exist_ok=True)
     timesteps = 2_000_000
     
-    train_env = make_vec_env("BipedalWalker-v3", 4)
+    def make_env():
+        env = gym.make("BipedalWalker-v3")
+        env = SimpleBipedalRewardShaper(env)
+        return env
+    
+    train_env = make_vec_env(make_env, 4)
     train_env = VecNormalize(train_env)
 
-    eval_env = DummyVecEnv([lambda: Monitor(gym.make("BipedalWalker-v3"))])
+    def make_eval_env():
+        env = gym.make("BipedalWalker-v3")
+        env = SimpleBipedalRewardShaper(env)
+        return Monitor(env)
+    
+    eval_env = DummyVecEnv([make_eval_env])
     eval_env = VecNormalize(eval_env, training=False)
 
     stop_training = StopTrainingOnRewardThreshold(230., verbose=1)
