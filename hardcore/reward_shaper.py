@@ -35,8 +35,5 @@ class SimpleBipedalRewardShaper(Wrapper):
         'coordination': both_feet_penalty,
         'vertical': vertical_penalty
         }
-
-
-
         
         return obs, shaped_reward, terminated, truncated, info
