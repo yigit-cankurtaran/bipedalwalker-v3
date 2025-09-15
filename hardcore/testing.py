@@ -6,7 +6,10 @@ from stable_baselines3 import PPO
 import os
 from reward_shaper import SimpleBipedalRewardShaper
 
-def test(model_path="models/best_model.zip", norm_path="models/vec_normalize.pkl", ep_count=5):
+
+def test(
+    model_path="models/best_model.zip", norm_path="models/vec_normalize.pkl", ep_count=5
+):
     # Use the same reward shaping for testing
     base_env = gym.make("BipedalWalker-v3", render_mode="human", hardcore=True)
     shaped_env = SimpleBipedalRewardShaper(base_env)
@@ -19,14 +22,16 @@ def test(model_path="models/best_model.zip", norm_path="models/vec_normalize.pkl
         env.training = False
     else:
         print("normalization path doesn't exist, run training")
-    
+
     model = PPO.load(model_path)
 
-    rewards, lengths = evaluate_policy(model, env, n_eval_episodes=ep_count,
-                                 render=True, return_episode_rewards=True)
+    rewards, lengths = evaluate_policy(
+        model, env, n_eval_episodes=ep_count, render=True, return_episode_rewards=True
+    )
 
     for i in range(ep_count):
-        print(f"ep {i+1}'s reward is {rewards[i]}")
+        print(f"ep {i + 1}'s reward is {rewards[i]}")
+
 
 if __name__ == "__main__":
     test()
