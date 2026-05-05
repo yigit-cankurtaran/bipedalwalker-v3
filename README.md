@@ -2,6 +2,10 @@
 
 High-performance reinforcement learning implementation for the BipedalWalker-v3 Hardcore environment using PPO and custom reward shaping. Achieves 450+ mean rewards, significantly outperforming standard benchmarks.
 
+![BipedalWalker Hardcore performance](assets/hardcore_perf.gif)
+
+Note: leg shaking is emergent behavior to detect obstacles.
+
 ## Performance
 
 This implementation achieves state-of-the-art results on the notoriously difficult BipedalWalker-v3 Hardcore environment:
