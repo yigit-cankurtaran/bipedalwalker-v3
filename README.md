@@ -6,6 +6,10 @@ High-performance reinforcement learning implementation for the BipedalWalker-v3 
 
 Note: leg shaking is emergent behavior to detect obstacles.
 
+## Video
+
+Recorded rollouts from the trained hardcore policy: [Watch on YouTube](https://youtu.be/M2l2B26Jihc).
+
 ## Performance
 
 This implementation achieves state-of-the-art results on the notoriously difficult BipedalWalker-v3 Hardcore environment:
@@ -81,6 +85,15 @@ Evaluate a trained model with visual rendering:
 cd hardcore
 python testing.py
 ```
+
+Record three deterministic rollouts and encode them as an upload-ready MP4:
+
+```bash
+python hardcore/record.py
+```
+
+The recorder uses the saved policy and normalization statistics. Use `--episodes`,
+`--seed`, or `--output` to customize the recording.
 
 ## Environment Details
 
